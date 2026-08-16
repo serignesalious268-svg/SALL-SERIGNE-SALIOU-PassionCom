@@ -382,9 +382,14 @@ html[data-theme="light"] .theme-toggle .icon-moon{ display:block; }
 .notice strong{ color:var(--ink); }
 
 /* Person cards */
-.person-card .card-media{ aspect-ratio:3/4; }
+.avatar-initials{ font-family:var(--font-display); font-weight:700; font-size:3.4rem; color:#fff; letter-spacing:.02em; text-shadow:0 4px 18px rgba(0,0,0,.18); }
 .person-role{ font-family:var(--font-mono); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--blue); margin-bottom:6px; display:block; }
 
 /* Reveal on scroll */
 .reveal{ opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
 .reveal.in{ opacity:1; transform:translateY(0); }
+.card{
+  background:var(--bg-card); border:1px solid var(--line); border-radius:var(--radius-md);
+  overflow:hidden; transition:.25s; position:relative;
+}
+.card:hover{ transform:translateY(-4px); box-shadow:var(--shadow); border-color:transparent; }

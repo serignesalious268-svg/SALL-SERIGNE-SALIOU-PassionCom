@@ -163,24 +163,39 @@
     });
   });
 
-  /* ---------- 5. FORMULAIRE DE CONTACT ---------- */
-  const contactForm = document.querySelector("#contact-form");
-  if (contactForm) {
-    contactForm.addEventListener("submit", async (e) => {
-      const statusBox = document.querySelector("#form-status");
-      const submitBtn = contactForm.querySelector("button[type=submit]");
-      // Laisse la vraie soumission HTTP se faire (FormSubmit) ; on affiche juste un état de chargement.
-      if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Envoi en cours…";
-      }
-      if (statusBox) {
-        statusBox.classList.remove("err");
-        statusBox.classList.add("show", "ok");
-        statusBox.textContent = "Merci ! Votre message est en cours d'envoi vers notre équipe.";
-      }
-    });
-  }
+  /* ---------- 5. FORMULAIRE DE CONTACT (mailto direct) ---------- */
+const contactForm = document.querySelector("#contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const statusBox = document.querySelector("#form-status");
+
+    const nom = document.querySelector("#nom")?.value || "";
+    const email = document.querySelector("#email")?.value || "";
+    const telephone = document.querySelector("#telephone")?.value || "";
+    const sujet = document.querySelector("#sujet")?.value || "Message depuis le site";
+    const message = document.querySelector("#message")?.value || "";
+
+    const body =
+      `Nom : ${nom}\n` +
+      `Email : ${email}\n` +
+      `Téléphone : ${telephone}\n\n` +
+      `Message :\n${message}`;
+
+    const mailtoLink =
+      `mailto:serignesalious268@gmail.com` +
+      `?subject=${encodeURIComponent("Nouveau message — Passion.com : " + sujet)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+    window.location.href = mailtoLink;
+
+    if (statusBox) {
+      statusBox.classList.remove("err");
+      statusBox.classList.add("show", "ok");
+      statusBox.textContent = "Votre application email s'ouvre avec le message prêt à envoyer — il ne reste qu'à cliquer sur Envoyer depuis votre boîte mail.";
+    }
+  });
+}
 
   /* ---------- 6. RÉVÉLATION AU DÉFILEMENT ---------- */
   const revealEls = document.querySelectorAll(".reveal");
