@@ -221,3 +221,78 @@ if (contactForm) {
     el.textContent = new Date().getFullYear();
   });
 })();
+
+/* ---------- 8. BARRE DE PROGRESSION DE DÉFILEMENT ---------- */
+const progressBar = document.createElement("div");
+progressBar.className = "scroll-progress";
+document.body.appendChild(progressBar);
+function updateScrollProgress() {
+  const h = document.documentElement;
+  const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progressBar.style.width = (isNaN(scrolled) ? 0 : scrolled) + "%";
+}
+window.addEventListener("scroll", updateScrollProgress, { passive: true });
+updateScrollProgress();
+
+/* ---------- 9. BOUTON WHATSAPP FLOTTANT ---------- */
+const waFloat = document.createElement("a");
+waFloat.href = "https://wa.me/221778096114";
+waFloat.target = "_blank";
+waFloat.rel = "noopener";
+waFloat.className = "whatsapp-float";
+waFloat.setAttribute("aria-label", "Contacter Passion.com sur WhatsApp");
+waFloat.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 01-12.4 7.6L3 20l1-5.3A8.5 8.5 0 1121 11.5z"/><path d="M8.5 9.5c0 3.5 2.5 6 6 6"/></svg>`;
+document.body.appendChild(waFloat);
+
+/* ---------- 10. PARALLAX DU HERO (mouvement souris) ---------- */
+const heroVisual = document.querySelector(".hero-visual");
+if (heroVisual && window.matchMedia("(hover: hover)").matches) {
+  const shape = heroVisual.querySelector(".p-shape");
+  const ring = heroVisual.querySelector(".ring");
+  heroVisual.addEventListener("mousemove", (e) => {
+    const rect = heroVisual.getBoundingClientRect();
+    const x = (e.clientX - rect.left - rect.width / 2) / rect.width;
+    const y = (e.clientY - rect.top - rect.height / 2) / rect.height;
+    if (shape) shape.style.transform = `translate(${x * 14}px, ${y * 14}px) rotate(${x * 4}deg)`;
+    if (ring) ring.style.transform = `translate(${x * -8}px, ${y * -8}px)`;
+  });
+  heroVisual.addEventListener("mouseleave", () => {
+    const shape = heroVisual.querySelector(".p-shape");
+    const ring = heroVisual.querySelector(".ring");
+    if (shape) shape.style.transform = "";
+    if (ring) ring.style.transform = "";
+  });
+}
+
+/* ---------- 11. COMPTEURS ANIMÉS (statistiques du hero) ---------- */
+const statEls = document.querySelectorAll(".hero-stat b");
+if (statEls.length && "IntersectionObserver" in window) {
+  const animateCount = (el) => {
+    const raw = el.textContent.trim();
+    const match = raw.match(/^(\d+)(.*)$/);
+    if (!match) return;
+    const target = parseInt(match[1], 10);
+    const suffix = match[2];
+    const duration = 1200;
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target) + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  };
+  const statObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          statObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+  statEls.forEach((el) => statObserver.observe(el));
+}
